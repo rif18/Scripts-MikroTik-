@@ -1,0 +1,17 @@
+/ip firewall filter
+add action=drop chain=forward dst-address-list=LINE src-address=192.168.50.0/24 comment="Blocking LINE on RouterOS using Address-Lists"
+
+/ip firewall address-list add list=LINE address=203.104.158.0/24
+/ip firewall address-list add list=LINE address=203.104.157.0/24
+/ip firewall address-list add list=LINE address=203.104.156.0/24
+/ip firewall address-list add list=LINE address=203.104.156.0/23
+/ip firewall address-list add list=LINE address=203.104.155.0/24
+/ip firewall address-list add list=LINE address=203.104.154.0/24
+/ip firewall address-list add list=LINE address=203.104.153.0/24
+/ip firewall address-list add list=LINE address=203.104.152.0/24
+/ip firewall address-list add list=LINE address=203.104.152.0/22
+/ip firewall address-list add list=LINE address=203.104.151.0/24
+/ip firewall address-list add list=LINE address=203.104.150.0/24
+/ip firewall address-list add list=LINE address=203.104.149.0/24
+/ip firewall address-list add list=LINE address=203.104.148.0/24
+/ip firewall address-list add list=LINE address=203.104.147.0/24
