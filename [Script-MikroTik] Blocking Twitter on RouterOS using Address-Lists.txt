@@ -1,0 +1,14 @@
+/ip firewall filter
+add action=drop chain=forward dst-address-list=Twitter src-address=192.168.50.0/24 comment="Blocking Twitter on RouterOS using Address-Lists"
+
+/ip firewall address-list add list=Twitter address=8.25.196.0/23
+/ip firewall address-list add list=Twitter address=8.25.194.0/23
+/ip firewall address-list add list=Twitter address=69.195.188.0/24
+/ip firewall address-list add list=Twitter address=69.195.187.0/24
+/ip firewall address-list add list=Twitter address=69.195.186.0/24
+/ip firewall address-list add list=Twitter address=69.195.185.0/24
+/ip firewall address-list add list=Twitter address=69.195.182.0/24
+/ip firewall address-list add list=Twitter address=69.195.181.0/24
+/ip firewall address-list add list=Twitter address=69.195.180.0/24
+/ip firewall address-list add list=Twitter address=69.195.179.0/24
+/ip firewall address-list add list=Twitter address=69.195.178.0/24
