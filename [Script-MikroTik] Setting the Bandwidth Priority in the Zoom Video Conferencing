@@ -1,0 +1,18 @@
+/ip firewall mangle
+add action=mark-connection chain=prerouting comment="Mark Zoom Application Connections" dst-address-list=Zoom dst-port=3478,3479,5090,5091,8801-8810 new-connection-mark=Zoom-Connection passthrough=yes protocol=tcp
+add action=mark-connection chain=prerouting dst-address-list=Zoom dst-port=3478,3479,5090,5091,8801-8810 new-connection-mark=Zoom-Connection passthrough=yes protocol=udp
+add action=mark-connection chain=prerouting comment="Mark Zoom Web App Connections" dst-address-list=Zoom dst-port=80,443 new-connection-mark=Zoom-Connection passthrough=yes protocol=tcp
+add action=mark-packet chain=prerouting comment="Mark All Zoom Packets" connection-mark=Zoom-Connection new-packet-mark=Zoom-Packet passthrough=no
+
+/queue simple
+add comment="Internet Package (Upload Speed: 300 Mbps, Download Speed: 300 Mbps)" max-limit=300M/300M name=Parent_Queue target=192.168.50.0/24
+add comment="Share Speed  to Zoom (Upload Speed: 20Mbps, Download Speed: 20Mbps)" max-limit=20M/20M name=Queue_Zoom packet-marks=Zoom-Packet parent=Parent_Queue priority=1/1 target=192.168.50.0/24
+add comment="Share Speed For General Working (Upload Speed: 280 Mbps, Download Speed: 280Mbps)" max-limit=280M/280M name=Queue_Other packet-marks=no-mark parent=Parent_Queue target=192.168.50.0/24
+
+/ip firewall address-list
+add address=3.7.35.0/25	list=Zoom
+add address=3.21.137.128/25 list=Zoom
+add address=3.22.11.0/24 list=Zoom
+add address=3.23.93.0/24 list=Zoom
+add address=3.25.41.128/25 list=Zoom
+add address=3.25.42.0/25 list=Zoom
