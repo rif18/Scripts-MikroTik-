@@ -1,0 +1,34 @@
+/ip route rule
+add src-address=10.1.1.0/24 table=ISP1
+add src-address=10.2.2.0/24 table=ISP2
+
+/ip route
+add check-gateway=ping comment=ISP1 distance=1 gateway=192.168.1.1 routing-mark=ISP1
+add comment=ISP2-Backup distance=2 gateway=172.16.1.1 routing-mark=ISP1
+add check-gateway=ping comment=ISP2 distance=1 gateway=172.16.1.1 routing-mark=ISP2
+add comment=ISP1-Backup distance=2 gateway=192.168.1.1 routing-mark=ISP2
+
+/ip route rule
+add src-address=10.1.1.0/24 table=ISP1
+add src-address=10.2.2.0/24 table=ISP2
+
+/ip route
+add check-gateway=ping comment=ISP1 distance=1 gateway=192.168.1.1 routing-mark=ISP1
+add check-gateway=ping comment=ISP2 distance=1 gateway=172.16.1.1 routing-mark=ISP2
+add check-gateway=ping comment="Lokal proses router" distance=1 gateway=172.16.1.1,192.168.1.1
+
+/tool netwatch
+add disabled=yes down-script="/ip route disable [find comment=ISP1]" host=8.8.8.8 interval=10s up-script="/ip route enable [find comment=ISP1]"
+add disabled=yes down-script="/ip route disable [find comment=ISP2]" host=8.8.4.4 interval=10s up-script="/ip route enable [find comment=ISP2]"
+
+/ip route rule
+add src-address=10.1.1.0/24 table=ISP1
+add src-address=10.2.2.0/24 table=ISP2
+
+/ip route
+add comment=ISP1 distance=1 gateway=192.168.1.1 routing-mark=ISP1
+add comment=ISP2-Backup distance=2 gateway=172.16.1.1 routing-mark=ISP1
+add comment=ISP2 distance=1 gateway=172.16.1.1 routing-mark=ISP2
+add comment=ISP1-Backup distance=2 gateway=192.168.1.1 routing-mark=ISP2
+add comment="Netwatch ISP2" distance=1 dst-address=8.8.4.4/32 gateway=172.16.1.1
+add comment="Netwatch ISP1" distance=1 dst-address=8.8.8.8/32 gateway=192.168.1.1
