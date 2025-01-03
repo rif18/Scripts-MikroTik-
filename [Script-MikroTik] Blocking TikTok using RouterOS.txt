@@ -1,6 +1,12 @@
 /ip firewall filter
 add action=drop chain=forward dst-address-list=TikTok src-address=192.168.50.0/24 comment="Blocking TikTok using RouterOS"
 
+/ip firewall filter
+add action=drop chain=forward protocol=tcp tls-host=*.musical.ly
+add action=drop chain=forward content=tiktokv.com 
+add action=drop chain=forward content=musical.ly
+add action=drop chain=forward content=tiktok
+
 /ip firewall mangle
 add action=add-dst-to-address-list address-list=TikTok address-list-timeout=4w2d chain=prerouting content=.tiktok.com src-address=192.168.50.0/24 comment="Detecting IP Addresses TikTok"
 add action=add-dst-to-address-list address-list=TikTok address-list-timeout=4w2d chain=prerouting content=.tiktokv.com src-address=192.168.50.0/24
