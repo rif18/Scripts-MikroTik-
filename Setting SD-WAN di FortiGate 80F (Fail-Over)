@@ -1,0 +1,88 @@
+Setting SD-WAN di FortiGate 80F:
+
+Load balance berbasis persentase (misal 70% ISP1, 30% ISP2)
+
+Failover otomatis saat ISP down
+
+Prioritas berdasarkan aplikasi (misal Zoom lewat ISP yang lebih stabil)
+
+⚙️ LANGKAH SETTING SD-WAN DI FORTIGATE 80F
+1. Aktifkan SD-WAN
+📁 Network > SD-WAN
+→ Klik Enable SD-WAN
+→ Tambahkan interface WAN:
+
+Tambahkan port2 (ISP1)
+
+Tambahkan port3 (ISP2)
+
+2. Seting Member (Koneksi Internet)
+Setiap koneksi (WAN) disebut SD-WAN Member.
+
+Interface: port2
+
+Gateway: 192.168.1.1
+
+Priority: 1
+
+Weight: 7 ← untuk 70%
+
+→ Klik Add
+
+Interface: port3
+
+Gateway: 192.168.2.1
+
+Priority: 1
+
+Weight: 3 ← untuk 30%
+
+Weight ini yang menentukan distribusi beban
+
+3. Atur Performance SLA (optional tapi direkomendasikan)
+📁 Network > SD-WAN > Performance SLA
+→ Klik Create New
+
+Name: InternetCheck
+
+Protocol: ping
+
+Server: 8.8.8.8 (atau DNS/host yang stabil)
+
+Members: Pilih port2 dan port3
+
+FortiGate akan ping ke IP itu terus, kalau salah satu koneksi down → langsung failover.
+
+4. Buat SD-WAN Rule
+📁 Network > SD-WAN Rules
+→ Klik Create New
+
+Name: LoadBalanceRule
+
+Destination: all
+
+Source: all
+
+Service: all
+
+Strategy: Manual
+
+Selected Members:
+
+port2 (weight: 7)
+
+port3 (weight: 3)
+
+→ Klik OK
+
+Kalau mau rule berdasarkan aplikasi (Zoom, Teams, dst), tinggal buat SD-WAN rule baru dengan service spesifik.
+
+5. Edit IPv4 Policy
+📁 Policy & Objects > IPv4 Policy
+→ Edit policy dari LAN ke WAN
+
+Ganti Outgoing Interface dari port2 ke SD-WAN
+
+6. Cek Status SD-WAN
+📁 Network > SD-WAN
+→ Lihat grafik dan statistik, kamu akan lihat traffic dibagi sesuai weight (70:30)
